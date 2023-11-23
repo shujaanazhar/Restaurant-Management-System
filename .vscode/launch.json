@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "RestaurantManagementSystem",
+            "request": "launch",
+            "mainClass": "RestaurantManagementSystem",
+            "projectName": "Restaurant-Management-System_2ff6279b"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
