@@ -1,47 +1,119 @@
-import java.io.IOException;
-
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
- 
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+
+
 public class App extends Application {
+
     @Override
     public void start(Stage primaryStage) {
-        // Button btn = new Button();
-        // btn.setText("Say 'Hello World'");
-        // btn.setOnAction(new EventHandler<ActionEvent>() {
-        //     @Override
-        //     public void handle(ActionEvent event) {
-        //         System.out.println("Hello World!");
-        //     }
-        // });
+        primaryStage.setTitle("Restaurant Management System");
+
+        Text userTypeText = new Text("Choose the user type");
+        userTypeText.setStyle("-fx-font-size: 16pt;");
+        // Creating buttons
+        Button customerButton = new Button("Customer");
+        Button adminButton = new Button("Admin");
+        Button chefButton = new Button("Chef");
+
+        // Beautify the buttons
+        customerButton.setStyle("-fx-font-size: 14pt;");
+        adminButton.setStyle("-fx-font-size: 14pt;");
+        chefButton.setStyle("-fx-font-size: 14pt;");
+
+        // Setting actions for buttons
+        customerButton.setOnAction(e -> openCustomerInterface());
+        adminButton.setOnAction(e -> openAdminInterface());
+        chefButton.setOnAction(e -> openChefInterface());
+
+        // Adding buttons to layout
+        VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.getChildren().addAll(userTypeText, customerButton, adminButton, chefButton);
+
+        // Creating scene and setting the layout
+        Scene scene = new Scene(layout, 700, 500);
         
-        // StackPane root = new StackPane();
-        // root.getChildren().add(btn);
-  
-  Parent root;
-        try {
-            root = FXMLLoader.load(getClass().getResource("MainScene.fxml"));
-            Scene scene = new Scene(root);
-        
-        //   Scene scene = new Scene(root, 300, 250);
-        
-        primaryStage.setTitle("Hello World!");
-                primaryStage.setScene(scene);
-                primaryStage.show();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            // e.printStackTrace();
-        }
+        scene.getRoot().setStyle("-fx-background-color: lightblue;");
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
- 
- public static void main(String[] args) {
+
+    // Methods to open new interfaces
+    private void openCustomerInterface() {
+        // Logic to open Customer interface
+        System.out.println("Opening Customer Interface");
+        // You would create a new scene here and define the Customer interface elements
+    }
+
+    private void openAdminInterface() {
+        // Logic to open Admin interface
+        System.out.println("Opening Admin Interface");
+        // You would create a new scene here and define the Admin interface elements
+    }
+
+    private void openChefInterface() {
+        // Logic to open Chef interface
+        System.out.println("Opening Chef Interface");
+        // You would create a new scene here and define the Chef interface elements
+    }
+
+    public static void main(String[] args) {
         launch(args);
     }
 }
+
+
+
+/* RUN THIS TO CREATE DB */
+
+// import java.sql.Connection;
+// import java.sql.DriverManager;
+// import java.sql.SQLException;
+// import java.sql.Statement;
+
+// public class App {
+//     public static void main(String[] args) {
+//         Connection conn = null;
+//         Statement stmt = null;
+
+//         try {
+//             // MySQL database URL
+//             String url = "jdbc:mysql://localhost:3306/";
+//             String username = "root";
+//             String password = "shujaanazhar";
+
+//             // Establish a connection to the MySQL server
+//             conn = DriverManager.getConnection(url, username, password);
+
+//             if (conn != null) {
+//                 System.out.println("Connected to MySQL server.");
+
+//                 // Create a new database
+//                 stmt = conn.createStatement();
+//                 String dbName = "RMS_DMS"; // Replace with your database name
+
+//                 System.out.println("Database created successfully: " + dbName);
+//             }
+//         } catch (SQLException e) {
+//             System.out.println(e.getMessage());
+//         } finally {
+//             try {
+//                 if (stmt != null) {
+//                     stmt.close();
+//                 }
+//                 if (conn != null) {
+//                     conn.close();
+//                 }
+//             } catch (SQLException ex) {
+//                 System.out.println(ex.getMessage());
+//             }
+//         }
+//     }
+// }
