@@ -5,13 +5,14 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-
 
 public class App extends Application {
 
+    private Stage primaryStage;
+
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
         primaryStage.setTitle("Restaurant Management System");
 
         Text userTypeText = new Text("Choose the user type");
@@ -38,36 +39,34 @@ public class App extends Application {
 
         // Creating scene and setting the layout
         Scene scene = new Scene(layout, 700, 500);
-        
         scene.getRoot().setStyle("-fx-background-color: lightblue;");
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    // Methods to open new interfaces
+    // Method to open Customer interface
     private void openCustomerInterface() {
-        // Logic to open Customer interface
-        System.out.println("Opening Customer Interface");
-        // You would create a new scene here and define the Customer interface elements
+        Scene customerScene = CustomerInterface.createScene(primaryStage);
+        primaryStage.setScene(customerScene);
     }
 
+    // Methods for Admin and Chef interfaces
     private void openAdminInterface() {
-        // Logic to open Admin interface
-        System.out.println("Opening Admin Interface");
-        // You would create a new scene here and define the Admin interface elements
+        Scene adminScene = AdminInterface.createScene(primaryStage);
+        primaryStage.setScene(adminScene);
     }
 
     private void openChefInterface() {
-        // Logic to open Chef interface
-        System.out.println("Opening Chef Interface");
-        // You would create a new scene here and define the Chef interface elements
+        Scene chefScene = ChefInterface.createScene(primaryStage);
+        primaryStage.setScene(chefScene);
     }
 
     public static void main(String[] args) {
         launch(args);
     }
 }
+
 
 
 
