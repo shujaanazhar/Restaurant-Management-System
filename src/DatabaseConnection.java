@@ -3,11 +3,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/mysql";
-    private static final String USER = "root";
-    private static final String PASSWORD = "shujaanazhar";
+    static final String URL = "jdbc:mysql://localhost:3306/RMS_DMS";
+    static final String USERNAME = "root";
+    static final String PASSWORD = "shujaanazhar";
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, USER, PASSWORD);
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 }
