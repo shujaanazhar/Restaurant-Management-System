@@ -10,11 +10,11 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public Item(String itemName2, int price, String description) {
-        this.itemName = itemName2;
-        this.price = price;
-        this.description = description;
-    }
+    // public Item(String itemName2, int price, String description) {
+    //     this.itemName = itemName2;
+    //     this.price = price;
+    //     this.description = description;
+    // }
 
     public String getItemName() {
         return itemName;

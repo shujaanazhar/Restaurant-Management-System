@@ -143,7 +143,7 @@ public class ChefInterface {
                 String itemName = resultSet.getString("item_name");
                 int price = resultSet.getInt("price");
                 String description = resultSet.getString("descrip");
-                menuList.add(new Item(itemName, price, description)); // Add items to the menuList
+                // menuList.add(new Item(itemName, price, description)); // Add items to the menuList
             }
     
             tableView.setItems(menuList);
