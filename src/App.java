@@ -38,7 +38,7 @@ public class App extends Application {
         layout.getChildren().addAll(userTypeText, customerButton, adminButton, chefButton);
 
         // Creating scene and setting the layout
-        Scene scene = new Scene(layout, 700, 500);
+        Scene scene = new Scene(layout, 900, 750);
         scene.getRoot().setStyle("-fx-background-color: lightblue;");
 
         primaryStage.setScene(scene);
