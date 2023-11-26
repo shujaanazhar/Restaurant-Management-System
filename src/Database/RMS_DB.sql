@@ -9,23 +9,31 @@ create table reservation(
     cust_name varchar(255) not null,
     email varchar(255) not null,
     reservation_time time,
-    reservation_date date
+    reservation_date date,
+    numPeople int not null
 );
 
 create table tables(
     table_no int primary key,
     table_status varchar(255) check (table_status in ('available', 'unavailable')),
+    numSeats int,
     reservation_id int,
     foreign key (reservation_id) references reservation(reservation_id)
 );
 
-create table order_table(
-    order_id int primary key,
-    order_item varchar(255) not null,
-    quantity int not null,
-    reservation_id int not null,
-    foreign key (order_item) references menu(item_name),
-    foreign key (reservation_id) references reservation(reservation_id)
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    reservation_id INT NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservation(reservation_id)
+);
+
+CREATE TABLE order_items (
+    order_item_id INT PRIMARY KEY,
+    order_id INT NOT NULL,
+    menu_item_name VARCHAR(255) NOT NULL,
+    quantity INT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (menu_item_name) REFERENCES menu(item_name)
 );
 
 create table inventory(
@@ -68,4 +76,20 @@ INSERT INTO tables (table_no, table_status) VALUES
 INSERT INTO inventory (item_name, quantity)
 SELECT item_name, 10 AS quantity
 FROM menu;
+
+INSERT INTO reservation (reservation_id, cust_name, email, reservation_time, reservation_date, numPeople) VALUES 
+(1, 'John Doe', 'john@example.com', '12:00:00', '2023-11-24', 4),
+(2, 'Jane Smith', 'jane@example.com', '18:30:00', '2023-11-25', 2);
+
+INSERT INTO tables (table_no, table_status, numSeats, reservation_id) VALUES 
+(1, 'unavailable', 4, 1),
+(2, 'unavailable', 2, 2),
+(3, 'available', 4, NULL),
+(4, 'available', 4, NULL),
+(5, 'available', 4, NULL),
+(6, 'available', 4, NULL),
+(7, 'available', 4, NULL),
+(8, 'available', 4, NULL),
+(9, 'available', 4, NULL),
+(10, 'available', 4, NULL);
 
