@@ -1,6 +1,16 @@
+import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -118,5 +128,40 @@ public class Reservation {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void showReservationMadePopup() {
+        Stage confirmationStage = new Stage();
+        confirmationStage.setTitle("Reservation Confirmation");
+
+        Label confirmationLabel = new Label("Reservation successfully made!");
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(e -> confirmationStage.close());
+        
+        VBox confirmationLayout = new VBox(10);
+        confirmationLayout.setAlignment(Pos.CENTER);
+        confirmationLayout.getChildren().addAll(confirmationLabel, closeButton);
+
+        Scene confirmationScene = new Scene(confirmationLayout, 300, 150);
+        confirmationStage.setScene(confirmationScene);
+        confirmationStage.showAndWait();
+    }
+
+    public static void showReservationCancelledPopup() {
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.setTitle("Reservation Cancelled");
+
+        Text popupText = new Text("Reservation has been cancelled successfully!");
+        Button closeButton = new Button("Close");
+        closeButton.setOnAction(e -> popupStage.close());
+
+        VBox popupLayout = new VBox(20);
+        popupLayout.setAlignment(Pos.CENTER);
+        popupLayout.getChildren().addAll(popupText, closeButton);
+
+        Scene popupScene = new Scene(popupLayout, 300, 150);
+        popupStage.setScene(popupScene);
+        popupStage.showAndWait();
     }
 }
