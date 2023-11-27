@@ -5,26 +5,17 @@ create table menu(
 );
 
 create table reservation(
-    reservation_id int primary key,
+    email varchar(255) primary key,
     cust_name varchar(255) not null,
-    email varchar(255) not null,
     reservation_time time,
     reservation_date date,
     numPeople int not null
 );
 
-create table tables(
-    table_no int primary key,
-    table_status varchar(255) check (table_status in ('available', 'unavailable')),
-    numSeats int,
-    reservation_id int,
-    foreign key (reservation_id) references reservation(reservation_id)
-);
-
 CREATE TABLE orders (
     order_id INT PRIMARY KEY,
-    reservation_id INT NOT NULL,
-    FOREIGN KEY (reservation_id) REFERENCES reservation(reservation_id)
+    reservation_id varchar(255) NOT NULL,
+    FOREIGN KEY (reservation_id) REFERENCES reservation(email)
 );
 
 CREATE TABLE order_items (
@@ -61,35 +52,12 @@ INSERT INTO menu (item_name, price, descrip) VALUES
 ('Fruit Platter', 12, 'Assorted fresh seasonal fruits'),
 ('Mango Smoothie', 6, 'Refreshing smoothie made with fresh mangoes and yogurt');
 
-INSERT INTO tables (table_no, table_status) VALUES
-(1, 'available'),
-(2, 'available'),
-(3, 'available'),
-(4, 'available'),
-(5, 'available'),
-(6, 'available'),
-(7, 'available'),
-(8, 'available'),
-(9, 'available'),
-(10, 'available');
-
 INSERT INTO inventory (item_name, quantity)
 SELECT item_name, 10 AS quantity
 FROM menu;
 
-INSERT INTO reservation (reservation_id, cust_name, email, reservation_time, reservation_date, numPeople) VALUES 
-(1, 'John Doe', 'john@example.com', '12:00:00', '2023-11-24', 4),
-(2, 'Jane Smith', 'jane@example.com', '18:30:00', '2023-11-25', 2);
+INSERT INTO reservation (cust_name, email, reservation_time, reservation_date, numPeople) VALUES 
+('John Doe', 'john@example.com', '12:00:00', '2023-11-24', 4),
+('Jane Smith', 'jane@example.com', '18:30:00', '2023-11-25', 2);
 
-INSERT INTO tables (table_no, table_status, numSeats, reservation_id) VALUES 
-(1, 'unavailable', 4, 1),
-(2, 'unavailable', 2, 2),
-(3, 'available', 4, NULL),
-(4, 'available', 4, NULL),
-(5, 'available', 4, NULL),
-(6, 'available', 4, NULL),
-(7, 'available', 4, NULL),
-(8, 'available', 4, NULL),
-(9, 'available', 4, NULL),
-(10, 'available', 4, NULL);
 
