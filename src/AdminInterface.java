@@ -182,9 +182,15 @@ public class AdminInterface {
             custNameCol.setCellValueFactory(new PropertyValueFactory<>("customerName"));
             TableColumn<Reservation, String> emailCol = new TableColumn<>("Email");
             emailCol.setCellValueFactory(new PropertyValueFactory<>("email"));
-            // ... (other columns as needed)
+            TableColumn<Reservation, String> resTimeCol = new TableColumn<>("Reservation Time");
+            resTimeCol.setCellValueFactory(new PropertyValueFactory<>("reservationTime"));
+            TableColumn<Reservation, String> resDateCol = new TableColumn<>("Reservation Date");
+            resDateCol.setCellValueFactory(new PropertyValueFactory<>("reservationDate"));
+            TableColumn<Reservation, String> numPeopleCol = new TableColumn<>("Number of People");
+            numPeopleCol.setCellValueFactory(new PropertyValueFactory<>("numPeople"));
+            
         
-            cancelReservationTableView.getColumns().addAll(custNameCol, emailCol); // Add necessary columns
+            cancelReservationTableView.getColumns().addAll(custNameCol, emailCol, resTimeCol, resDateCol, numPeopleCol); // Add necessary columns
         
             // Fetch and display existing reservations
             Reservation.fetchAndDisplayReservations(cancelReservationTableView);

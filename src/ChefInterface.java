@@ -67,12 +67,50 @@ public class ChefInterface {
             addItemStage.show();
         });
         
-
-        
+      
 
         viewOrdersButton.setOnAction(e -> {
-            // Add action for View Orders button
+            TableView<Item> orderItemsTableView = new TableView<>();
+        
+            TableColumn<Item, String> orderItemIdCol = new TableColumn<>("Order Item ID");
+            orderItemIdCol.setCellValueFactory(new PropertyValueFactory<>("orderItemId"));
+        
+            TableColumn<Item, Integer> orderIdCol = new TableColumn<>("Order ID");
+            orderIdCol.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        
+            TableColumn<Item, String> menuItemNameCol = new TableColumn<>("Menu Item Name");
+            menuItemNameCol.setCellValueFactory(new PropertyValueFactory<>("itemName"));
+        
+            TableColumn<Item, Integer> quantityCol = new TableColumn<>("Quantity");
+            quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        
+            orderItemsTableView.getColumns().addAll(orderItemIdCol, orderIdCol, menuItemNameCol, quantityCol);
+        
+            Item.fetchOrderItemsData(orderItemsTableView);
+        
+            // Create a new stage to display the order items table
+            VBox layout = new VBox(10);
+            layout.getChildren().addAll(orderItemsTableView);
+            layout.setAlignment(Pos.CENTER);
+            Scene scene = new Scene(layout, 600, 400);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("Order Items");
+            stage.show();
+
+            Button orderCompletedButton = new Button("Order Completed");
+            orderCompletedButton.setOnAction(cancelEvent -> {
+                // Get selected reservation and cancel it
+                Item selectedOrder = orderItemsTableView.getSelectionModel().getSelectedItem();
+                if (selectedOrder != null) {
+                    Item.deleteOrderItem(selectedOrder.getOrderItemId());
+                    Item.fetchOrderItemsData(orderItemsTableView); // Refresh table after cancellation
+                }
+            });
+        
+            layout.getChildren().add(orderCompletedButton);
         });
+        
 
         addMenuButton.setOnAction(e -> {
             TableView<Item> tableView = new TableView<>();

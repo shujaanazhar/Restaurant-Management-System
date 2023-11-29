@@ -60,7 +60,7 @@ public class App extends Application {
     private void openChefInterface() {
         Scene chefScene = ChefInterface.createScene(primaryStage);
         primaryStage.setScene(chefScene);
-    }
+    }   
 
     public static void main(String[] args) {
         launch(args);

@@ -34,7 +34,6 @@ ALTER TABLE order_items MODIFY COLUMN order_item_id INT AUTO_INCREMENT PRIMARY K
 ALTER TABLE order_items AUTO_INCREMENT = 1;
 
 
-
 create table inventory(
     item_name varchar(255) primary key,
     quantity int not null,
@@ -46,7 +45,6 @@ create table payment(
     total_price int not null,
     payment_status varchar(255) check (payment_status in ('paid', 'unpaid'))
 );
-
 
 INSERT INTO menu (item_name, price, descrip) VALUES
 ('Spaghetti Carbonara', 12, 'Pasta with bacon, eggs, and cheese'),

@@ -37,7 +37,7 @@ public class CustomerInterface {
         Text welcomeText = new Text("Welcome, Customer!");
         
         TextField emailField = new TextField();
-        emailField.setPromptText("Enter Email as ab c@xyz.com");
+        emailField.setPromptText("Enter Email as abc@xyz.com");
 
         Button makeReservationButton = new Button("Reserve Table");
         
@@ -139,29 +139,13 @@ public class CustomerInterface {
         cancelReservationButton.setOnAction(e -> {
             email = emailField.getText();
             if (email.isEmpty()) {
-            showAlert("Email field cannot be empty.");
+                showAlert("Email field cannot be empty.");
             }
             else{
-            // Stage cancelReservationStage = new Stage();
-            // cancelReservationStage.setTitle("Cancel Reservation");
-
-            // Button confirmCancelReservationButton = new Button("Confirm Cancel");
-            // confirmCancelReservationButton.setOnAction(event -> {
-
                 Reservation.cancelReservation(email);
                 Reservation.showReservationCancelledPopup();
-                // cancelReservationStage.close();
             }
-            });
-
-            // VBox cancelReservationLayout = new VBox(10);
-            // cancelReservationLayout.setAlignment(Pos.CENTER);
-            // cancelReservationLayout.getChildren().addAll(confirmCancelReservationButton);
-
-            // Scene cancelReservationScene = new Scene(cancelReservationLayout, 300, 200);
-            // cancelReservationStage.setScene(cancelReservationScene);
-            // cancelReservationStage.show();
-        // });
+        });
 
         placeOrderButton.setOnAction(e -> {
             email = emailField.getText();
@@ -267,20 +251,77 @@ public class CustomerInterface {
         }
         });
         
-
-        
-
-
         makePaymentButton.setOnAction(e -> {
             email = emailField.getText();
             if (email.isEmpty()) {
-            showAlert("Email field cannot be empty.");
+                showAlert("Email field cannot be empty.");
+            } else {
+                // Stage for Payment Details
+                Stage paymentStage = new Stage();
+                paymentStage.setTitle("Payment Details");
+        
+                // Payment TableView and Columns
+                TableView<Payment> paymentTableView = new TableView<>();
+                TableColumn<Payment, Integer> orderIDCol = new TableColumn<>("Order ID");
+                orderIDCol.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+                TableColumn<Payment, Integer> totalPriceCol = new TableColumn<>("Total Price");
+                totalPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+                TableColumn<Payment, String> paymentStatusCol = new TableColumn<>("Payment Status");
+                paymentStatusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
+                paymentTableView.getColumns().addAll(orderIDCol, totalPriceCol, paymentStatusCol);
+        
+                // Fetch and display payment information
+                Item.fetchPaymentInformation(paymentTableView, email);
+        
+                // Complete Payment Button
+                Button completePaymentButton = new Button("Complete Payment");
+                completePaymentButton.setAlignment(Pos.CENTER);
+        
+                completePaymentButton.setOnAction(cancelEvent -> {
+                    // Get selected payment and update its status to 'paid'
+                    Payment selectedPayment = paymentTableView.getSelectionModel().getSelectedItem();
+                    if (selectedPayment != null) {
+                        Item.updatePaymentStatusToPaid(selectedPayment.getOrderId(), email);
+        
+                        // Stage for entering card details
+                        Stage cardDetailsStage = new Stage();
+                        cardDetailsStage.setTitle("Enter Card Details");
+        
+                        Label cardNumberLabel = new Label("Card Number:");
+                        TextField cardNumberField = new TextField();
+                        Label expiryLabel = new Label("Expiry Date:");
+                        TextField expiryField = new TextField();
+                        Label cvvLabel = new Label("CVV:");
+                        TextField cvvField = new TextField();
+        
+                        Button confirmButton = new Button("Confirm");
+                        confirmButton.setAlignment(Pos.CENTER);
+        
+                        VBox root = new VBox(10);
+                        root.getChildren().addAll(cardNumberLabel, cardNumberField, expiryLabel, expiryField, cvvLabel, cvvField, confirmButton);
+        
+                        // Confirm Payment
+                        confirmButton.setOnAction(event -> {
+                            Item.fetchPaymentInformation(paymentTableView, email); // Refresh table after payment confirmation
+                            paymentStage.close();
+                            cardDetailsStage.close();
+                        });
+        
+                        Scene cardDetailsScene = new Scene(root, 400, 300);
+                        cardDetailsStage.setScene(cardDetailsScene);
+                        cardDetailsStage.show();
+                    }
+                });
+        
+                VBox paymentLayout = new VBox(15);
+                paymentLayout.setAlignment(Pos.CENTER);
+                paymentLayout.getChildren().addAll(paymentTableView, completePaymentButton);
+        
+                Scene paymentScene = new Scene(paymentLayout, 700, 500);
+                paymentStage.setScene(paymentScene);
+                paymentStage.show();
             }
-            else{
-
-            }
-
-        });
+        });    
 
         return customerScene;
     }
