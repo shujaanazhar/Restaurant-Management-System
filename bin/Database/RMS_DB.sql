@@ -27,8 +27,6 @@ CREATE TABLE order_items (
     FOREIGN KEY (menu_item_name) REFERENCES menu(item_name)
 );
 
-delete from orders
-
 ALTER TABLE order_items DROP PRIMARY KEY;
 
 ALTER TABLE order_items MODIFY COLUMN order_item_id INT AUTO_INCREMENT PRIMARY KEY;
