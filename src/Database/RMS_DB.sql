@@ -27,6 +27,14 @@ CREATE TABLE order_items (
     FOREIGN KEY (menu_item_name) REFERENCES menu(item_name)
 );
 
+ALTER TABLE order_items DROP PRIMARY KEY;
+
+ALTER TABLE order_items MODIFY COLUMN order_item_id INT AUTO_INCREMENT PRIMARY KEY;
+
+ALTER TABLE order_items AUTO_INCREMENT = 1;
+
+
+
 create table inventory(
     item_name varchar(255) primary key,
     quantity int not null,
