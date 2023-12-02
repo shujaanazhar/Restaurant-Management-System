@@ -2,8 +2,7 @@ import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,24 +21,38 @@ import javafx.stage.Stage;
 public class AdminInterface {
 
     public static Scene createScene(Stage primaryStage) {
+        String buttonStyle = "-fx-background-color: #610000; -fx-text-fill: white; -fx-font-size: 14pt; -fx-pref-width: 200px;";
+
         Text welcomeText = new Text("Welcome, Admin!");
         Button updateInventoryButton = new Button("View Inventory");
         Button makeReservationButton = new Button("Make Reservation");
         Button cancelReservationButton = new Button("Cancel Reservation");
         Button addMenuButton = new Button("View Menu");
+        
 
-        welcomeText.setStyle("-fx-font-size: 16pt;");
-        updateInventoryButton.setStyle("-fx-font-size: 14pt");
-        makeReservationButton.setStyle("-fx-font-size: 14pt");
-        cancelReservationButton.setStyle("-fx-font-size: 14pt");
-        addMenuButton.setStyle("-fx-font-size: 14pt;");
+        welcomeText.setStyle("-fx-font-size: 20pt; -fx-fill: #610000; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-family: 'Georgia';");
+        updateInventoryButton.setStyle(buttonStyle);
+        makeReservationButton.setStyle(buttonStyle);
+        cancelReservationButton.setStyle(buttonStyle);
+        addMenuButton.setStyle(buttonStyle);
+        String miniButtonStyle = "-fx-background-color: #750000; " +
+                "-fx-text-fill: white; " +
+                "-fx-border-radius: 5px; " +
+                "-fx-background-radius: 5px; " +
+                "-fx-border-color: #800000; " +
+                "-fx-border-width: 2px; " +
+                "-fx-cursor: hand; " +
+                "-fx-padding: 5px;" +
+                "-fx-font-weight: bold;";
+
+        String miniBack = "-fx-background-color: #ffc2c2;";
 
         VBox adminLayout = new VBox(20);
         adminLayout.setAlignment(Pos.CENTER);
         adminLayout.getChildren().addAll(welcomeText, updateInventoryButton, makeReservationButton, cancelReservationButton, addMenuButton);
 
         Scene adminScene = new Scene(adminLayout, 900, 750);
-        adminScene.getRoot().setStyle("-fx-background-color: lightyellow;");
+        adminLayout.setStyle("-fx-background-color: #ffcccc; -fx-padding: 50px; -fx-spacing: 20px;");
 
         updateInventoryButton.setOnAction(e -> {
             // Add action for Update Inventory button
@@ -63,7 +76,11 @@ public class AdminInterface {
             Item.fetchAndDisplayInventoryData(newTableView);
 
             Button addItemButton = new Button("Add Item");
+            addItemButton.setStyle(miniButtonStyle);
+
             addItemButton.setOnAction(event -> {
+                
+
                 String newItemName = itemNameField.getText();
                 int newQuantity = Integer.parseInt(quantityField.getText());
         
@@ -74,6 +91,8 @@ public class AdminInterface {
             
             VBox addItemLayout = new VBox(15);
             addItemLayout.setAlignment(Pos.CENTER);
+            addItemLayout.setPadding(new Insets(20));
+            addItemLayout.setStyle(miniBack);
             addItemLayout.getChildren().addAll(newTableView, itemNameField, quantityField, addItemButton); // Add new TableView to layout
         
             Scene addItemScene = new Scene(addItemLayout, 700, 500);
@@ -105,6 +124,8 @@ public class AdminInterface {
 
             VBox reservationLayout = new VBox(15);
             reservationLayout.setAlignment(Pos.CENTER);
+            reservationLayout.setPadding(new Insets(20));
+            reservationLayout.setStyle(miniBack);
             reservationLayout.getChildren().addAll(reservationTableView);
 
             Scene reservationScene = new Scene(reservationLayout, 700, 500);
@@ -113,6 +134,8 @@ public class AdminInterface {
 
             // Button to add a new reservation
             Button addReservationButton = new Button("Add Reservation");
+            addReservationButton.setStyle(miniButtonStyle);
+
             addReservationButton.setOnAction(event -> {
                 Stage addReservationStage = new Stage();
                 addReservationStage.setTitle("Add New Reservation");
@@ -145,6 +168,8 @@ public class AdminInterface {
 
                 // Button to confirm reservation addition
                 Button confirmReservationButton = new Button("Confirm Reservation");
+                confirmReservationButton.setStyle(miniButtonStyle);
+
                 confirmReservationButton.setOnAction(confirmEvent -> {
                     String custName = custNameField.getText();
                     String email = emailField.getText();
@@ -169,6 +194,7 @@ public class AdminInterface {
                 
 
                 addReservationLayout.getChildren().add(confirmReservationButton);
+                addReservationLayout.setStyle(miniBack);
             });
             reservationLayout.getChildren().add(addReservationButton);
         });
@@ -197,6 +223,8 @@ public class AdminInterface {
         
             VBox cancelReservationLayout = new VBox(15);
             cancelReservationLayout.setAlignment(Pos.CENTER);
+            cancelReservationLayout.setPadding(new Insets(20));
+            cancelReservationLayout.setStyle(miniBack);
             cancelReservationLayout.getChildren().addAll(cancelReservationTableView);
         
             Scene cancelReservationScene = new Scene(cancelReservationLayout, 700, 500);
@@ -205,6 +233,8 @@ public class AdminInterface {
         
             // Button to cancel a reservation
             Button cancelSelectedReservationButton = new Button("Cancel Selected Reservation");
+            cancelSelectedReservationButton.setStyle(miniButtonStyle);
+
             cancelSelectedReservationButton.setOnAction(cancelEvent -> {
                 // Get selected reservation and cancel it
                 Reservation selectedReservation = cancelReservationTableView.getSelectionModel().getSelectedItem();
@@ -252,6 +282,8 @@ public class AdminInterface {
             Item.fetchAndDisplayMenuData(tableView);
 
             Button addItemButton = new Button("Add Item");
+            addItemButton.setStyle(miniButtonStyle);
+
             addItemButton.setOnAction(event -> {
                 String newItemName = itemNameField.getText();
                 int newPrice = Integer.parseInt(priceField.getText());
@@ -263,6 +295,7 @@ public class AdminInterface {
             });
             VBox addItemLayout = new VBox(15);
             addItemLayout.setAlignment(Pos.CENTER);
+            addItemLayout.setPadding(new Insets(20));
             addItemLayout.getChildren().addAll(tableView, itemNameField, priceField, descField, addItemButton); // Add new TableView to layout
         
             Scene addItemScene = new Scene(addItemLayout, 700, 500);

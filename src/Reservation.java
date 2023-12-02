@@ -1,4 +1,3 @@
-import javafx.animation.PauseTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
@@ -11,10 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
 import java.sql.*;
-import java.time.LocalDate;
 
 public class Reservation {
     public String customerName;

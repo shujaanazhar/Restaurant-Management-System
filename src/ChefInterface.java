@@ -1,5 +1,4 @@
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -7,25 +6,35 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.sql.*;
-
 public class ChefInterface {
 
     public static Scene createScene(Stage primaryStage) {
+        String buttonStyle = "-fx-background-color: #cc6600; -fx-text-fill: white; -fx-font-size: 14pt; -fx-pref-width: 200px;";
+
         Text welcomeText = new Text("Welcome, Chef!");
         Button updateInventoryButton = new Button("Update Inventory");
         Button viewOrdersButton = new Button("View Orders");
         Button addMenuButton = new Button("Add Menu");
 
-        welcomeText.setStyle("-fx-font-size: 16pt;");
-        updateInventoryButton.setStyle("-fx-font-size: 14pt;");
-        viewOrdersButton.setStyle("-fx-font-size: 14pt;");
-        addMenuButton.setStyle("-fx-font-size: 14pt;");
+        welcomeText.setStyle("-fx-font-size: 20pt; -fx-fill: #cc3300; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-family: 'Georgia';");
+        updateInventoryButton.setStyle(buttonStyle);
+        viewOrdersButton.setStyle(buttonStyle);
+        addMenuButton.setStyle(buttonStyle);
+
+        String miniButtonStyle = "-fx-background-color: #cc6600; " +
+                "-fx-text-fill: white; " +
+                "-fx-border-radius: 5px; " +
+                "-fx-background-radius: 5px; " +
+                "-fx-border-color: #924d07; " +
+                "-fx-border-width: 2px; " +
+                "-fx-cursor: hand; " +
+                "-fx-padding: 5px;" +
+                "-fx-font-weight: bold;";
+        String miniBack = "-fx-background-color: #ffe3c7;";
 
         updateInventoryButton.setOnAction(e -> {
             Stage addItemStage = new Stage();
@@ -48,6 +57,8 @@ public class ChefInterface {
             Item.fetchAndDisplayInventoryData(newTableView);
 
             Button addItemButton = new Button("Add Item");
+            addItemButton.setStyle(miniButtonStyle);
+
             addItemButton.setOnAction(event -> {
                 String newItemName = itemNameField.getText();
                 int newQuantity = Integer.parseInt(quantityField.getText());
@@ -60,7 +71,9 @@ public class ChefInterface {
         
             VBox addItemLayout = new VBox(15);
             addItemLayout.setAlignment(Pos.CENTER);
+            addItemLayout.setPadding(new Insets(20));
             addItemLayout.getChildren().addAll(newTableView, itemNameField, quantityField, addItemButton); // Add new TableView to layout
+            addItemLayout.setStyle(miniBack);
         
             Scene addItemScene = new Scene(addItemLayout, 700, 500);
             addItemStage.setScene(addItemScene);
@@ -92,6 +105,9 @@ public class ChefInterface {
             VBox layout = new VBox(10);
             layout.getChildren().addAll(orderItemsTableView);
             layout.setAlignment(Pos.CENTER);
+            layout.setPadding(new Insets(20));
+            layout.setStyle(miniBack);
+
             Scene scene = new Scene(layout, 600, 400);
             Stage stage = new Stage();
             stage.setScene(scene);
@@ -99,6 +115,8 @@ public class ChefInterface {
             stage.show();
 
             Button orderCompletedButton = new Button("Order Completed");
+            orderCompletedButton.setStyle(miniButtonStyle);
+
             orderCompletedButton.setOnAction(cancelEvent -> {
                 // Get selected reservation and cancel it
                 Item selectedOrder = orderItemsTableView.getSelectionModel().getSelectedItem();
@@ -145,6 +163,8 @@ public class ChefInterface {
             Item.fetchAndDisplayMenuData(tableView);
 
             Button addItemButton = new Button("Add Item");
+            addItemButton.setStyle(miniButtonStyle);
+
             addItemButton.setOnAction(event -> {
                 String newItemName = itemNameField.getText();
                 int newPrice = Integer.parseInt(priceField.getText());
@@ -156,6 +176,8 @@ public class ChefInterface {
             });
             VBox addItemLayout = new VBox(15);
             addItemLayout.setAlignment(Pos.CENTER);
+            addItemLayout.setPadding(new Insets(20));
+            addItemLayout.setStyle(miniBack);
             addItemLayout.getChildren().addAll(tableView, itemNameField, priceField, descField, addItemButton); // Add new TableView to layout
         
             Scene addItemScene = new Scene(addItemLayout, 700, 500);
@@ -168,7 +190,7 @@ public class ChefInterface {
         chefLayout.getChildren().addAll(welcomeText, updateInventoryButton, viewOrdersButton, addMenuButton);
 
         Scene chefScene = new Scene(chefLayout, 900, 750);
-        chefScene.getRoot().setStyle("-fx-background-color: lightpink;");
+        chefScene.getRoot().setStyle("-fx-background-color: ffcc66;");
 
         return chefScene;
     }

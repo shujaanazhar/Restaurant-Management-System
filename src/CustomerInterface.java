@@ -1,15 +1,14 @@
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
@@ -17,15 +16,12 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.converter.IntegerStringConverter;
 
 
 
@@ -34,6 +30,8 @@ public class CustomerInterface {
     public static String email;
     
     public static Scene createScene(Stage primaryStage) {
+        String buttonStyle = "-fx-background-color: #C46B02; -fx-text-fill: white; -fx-font-size: 14pt; -fx-pref-width: 200px;";
+
         Text welcomeText = new Text("Welcome, Customer!");
         
         TextField emailField = new TextField();
@@ -47,32 +45,35 @@ public class CustomerInterface {
         
         Button makePaymentButton = new Button("Make Payment");
 
-        welcomeText.setStyle("-fx-font-size: 16pt;");
-        makeReservationButton.setStyle("-fx-font-size: 14pt;");
-        cancelReservationButton.setStyle("-fx-font-size: 14pt;");
-        placeOrderButton.setStyle("-fx-font-size: 14pt;");
-        makePaymentButton.setStyle("-fx-font-size: 14pt;");
+        welcomeText.setStyle("-fx-font-size: 20pt; -fx-fill: #ff6600; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-family: 'Georgia';");
+
+        makeReservationButton.setStyle(buttonStyle);
+        cancelReservationButton.setStyle(buttonStyle);
+        placeOrderButton.setStyle(buttonStyle);
+        makePaymentButton.setStyle(buttonStyle);
 
         emailField.setPrefWidth(200);
         emailField.setMinWidth(200);
         emailField.setMaxWidth(200);
         emailField.setAlignment(Pos.CENTER);
-        // UnaryOperator<TextFormatter.Change> filter = change -> {
-        //     if (change.isAdded() && change.getControlNewText().trim().isEmpty()) {
-        //         return null; // Disallow adding whitespace at the start or end
-        //     }
-        //     return change;
-        // };
-        // TextFormatter<String> formatter = new TextFormatter<>(filter);
-        // emailField.setTextFormatter(formatter);
-
 
         VBox customerLayout = new VBox(20);
         customerLayout.setAlignment(Pos.CENTER);
         customerLayout.getChildren().addAll(welcomeText, emailField, makeReservationButton, cancelReservationButton, placeOrderButton, makePaymentButton);
 
         Scene customerScene = new Scene(customerLayout, 900, 750);
-        customerScene.getRoot().setStyle("-fx-background-color: lightgreen;");
+        customerLayout.setStyle("-fx-background-color: #FAD5C2; -fx-padding: 50px; -fx-spacing: 20px;");
+
+        String miniButtonStyle = "-fx-background-color: #f4711a; " +
+                "-fx-text-fill: white; " +
+                "-fx-border-radius: 5px; " +
+                "-fx-background-radius: 5px; " +
+                "-fx-border-color: #ff6600; " +
+                "-fx-border-width: 2px; " +
+                "-fx-cursor: hand; " +
+                "-fx-padding: 5px;";
+        
+        String miniBack = "-fx-background-color: ffdbb8;";
 
         makeReservationButton.setOnAction(e -> {
             email = emailField.getText();
@@ -91,25 +92,51 @@ public class CustomerInterface {
             DatePicker datePicker = new DatePicker();
             datePicker.setPromptText("Reservation Date");
 
-            // Spinners for reservation time (hours and minutes)
+            // Create HBox for time elements
+            HBox timeBox = new HBox(10);
+            timeBox.setAlignment(Pos.CENTER);
             Spinner<Integer> hoursSpinner = new Spinner<>(0, 23, 12);
             Spinner<Integer> minutesSpinner = new Spinner<>(0, 59, 0);
-            Label timeLabel = new Label("Reservation Time:");
-            HBox timeBox = new HBox(10, timeLabel, hoursSpinner, new Label(":"), minutesSpinner);
+            timeBox.getChildren().addAll(hoursSpinner, new Label(":"), minutesSpinner);
 
             TextField numPeopleField = new TextField();
             numPeopleField.setPromptText("Number of People");
+            
+            // Add labels and fields with proper spacing
+            Label nameLabel = new Label("Customer Name:");
+            Label dateLabel = new Label("Reservation Date:");
+            Label timeLabel = new Label("Reservation Time (hh/mm):");
+            Label numPeopleLabel = new Label("Number of People:");
 
-            VBox addReservationLayout = new VBox(10);
+            VBox addReservationLayout = new VBox(15);
             addReservationLayout.setAlignment(Pos.CENTER);
-            addReservationLayout.getChildren().addAll(custNameField, datePicker, timeBox, numPeopleField);
+            addReservationLayout.setPadding(new Insets(20));
+            addReservationLayout.setStyle(miniBack);
+            addReservationLayout.getChildren().addAll(nameLabel, custNameField, dateLabel, datePicker, timeLabel, timeBox, numPeopleLabel, numPeopleField);
+
+            // Apply styles
+            nameLabel.setStyle("-fx-font-weight: bold;");
+            dateLabel.setStyle("-fx-font-weight: bold;");
+            timeLabel.setStyle("-fx-font-weight: bold;");
+            numPeopleLabel.setStyle("-fx-font-weight: bold;");
+            custNameField.setStyle("-fx-pref-width: 200;");
+            numPeopleField.setStyle("-fx-pref-width: 200;");
 
             Scene addReservationScene = new Scene(addReservationLayout, 400, 400);
             addReservationStage.setScene(addReservationScene);
             addReservationStage.show();
 
-            // Button to confirm reservation addition
             Button confirmReservationButton = new Button("Confirm Reservation");
+
+            confirmReservationButton.setStyle(miniButtonStyle);
+
+            confirmReservationButton.setOnMouseEntered(so -> {
+                confirmReservationButton.setStyle(miniButtonStyle + "-fx-background-color: #f99858;");
+            });
+
+            confirmReservationButton.setOnMouseExited(so -> {
+                confirmReservationButton.setStyle(miniButtonStyle);
+            });
             confirmReservationButton.setOnAction(confirmEvent -> {
                 String custName = custNameField.getText();
 
@@ -129,6 +156,7 @@ public class CustomerInterface {
 
                 // Show confirmation pop-up
                 Reservation.showReservationMadePopup();
+                addReservationStage.close();
             });
 
             addReservationLayout.getChildren().add(confirmReservationButton);
@@ -142,8 +170,13 @@ public class CustomerInterface {
                 showAlert("Email field cannot be empty.");
             }
             else{
+                if (isValidReservation(email)) {
                 Reservation.cancelReservation(email);
                 Reservation.showReservationCancelledPopup();
+                }
+                else {
+                    showAlert("No Customer Data with this email found!");
+                }
             }
         });
 
@@ -183,20 +216,20 @@ public class CustomerInterface {
                             {
                                 addButton.setOnAction(event -> {
                                     Item item = getTableView().getItems().get(getIndex());
-                                    int newQuantity = item.getQuantity() - 1;
-                                    if (newQuantity >= 0) {
-                                        item.setQuantity(newQuantity);
+                                    int currentQuantity = item.getQuantity();
+                                    int upperLimit = item.getUpperLimit();
+
+                                    if (currentQuantity < upperLimit) {
+                                        item.setQuantity(Math.min(currentQuantity + 1, upperLimit));
                                         getTableView().refresh();
                                     }
                                 });
             
                                 subtractButton.setOnAction(event -> {
                                     Item item = getTableView().getItems().get(getIndex());
-                                    int currentQuantity = item.getQuantity();
-                                    int upperLimit = item.getUpperLimit();
-
-                                    if (currentQuantity < upperLimit) {
-                                        item.setQuantity(Math.min(currentQuantity + 1, upperLimit));
+                                    int newQuantity = item.getQuantity() - 1;
+                                    if (newQuantity >= 0) {
+                                        item.setQuantity(newQuantity);
                                         getTableView().refresh();
                                     }
                                 });
@@ -225,6 +258,14 @@ public class CustomerInterface {
             
                 // Button to proceed to order confirmation
                 Button confirmOrderButton = new Button("Confirm Order");
+                confirmOrderButton.setStyle(miniButtonStyle);
+                confirmOrderButton.setOnMouseEntered(so -> {
+                    confirmOrderButton.setStyle(miniButtonStyle + "-fx-background-color: #f99858;");
+                });
+
+                    confirmOrderButton.setOnMouseExited(so -> {
+                        confirmOrderButton.setStyle(miniButtonStyle);
+                });
                 confirmOrderButton.setOnAction(confirmEvent -> {
                     ObservableList<Item> selectedItems = menuTableView.getItems().stream()
                             .filter(Item::isSelected)
@@ -241,6 +282,7 @@ public class CustomerInterface {
                 VBox menuLayout = new VBox(10);
                 menuLayout.setAlignment(Pos.CENTER);
                 menuLayout.getChildren().addAll(menuTableView, confirmOrderButton);
+                menuLayout.setStyle(miniBack);
             
                 Scene menuScene = new Scene(menuLayout, 800, 600);
                 Stage menuStage = new Stage();
@@ -248,6 +290,9 @@ public class CustomerInterface {
                 menuStage.setScene(menuScene);
                 menuStage.show();
             }
+            else {
+                    showAlert("Unable to Order as No Reservation Found!");
+                }
         }
         });
         
@@ -275,6 +320,14 @@ public class CustomerInterface {
         
                 // Complete Payment Button
                 Button completePaymentButton = new Button("Complete Payment");
+                completePaymentButton.setStyle(miniButtonStyle);
+                completePaymentButton.setOnMouseEntered(so -> {
+                    completePaymentButton.setStyle(miniButtonStyle + "-fx-background-color: #f99858;");
+                });
+
+                    completePaymentButton.setOnMouseExited(so -> {
+                        completePaymentButton.setStyle(miniButtonStyle);
+                });
                 completePaymentButton.setAlignment(Pos.CENTER);
         
                 completePaymentButton.setOnAction(cancelEvent -> {
@@ -283,21 +336,36 @@ public class CustomerInterface {
                     if (selectedPayment != null) {
                         Item.updatePaymentStatusToPaid(selectedPayment.getOrderId(), email);
         
-                        // Stage for entering card details
                         Stage cardDetailsStage = new Stage();
                         cardDetailsStage.setTitle("Enter Card Details");
-        
+
                         Label cardNumberLabel = new Label("Card Number:");
                         TextField cardNumberField = new TextField();
                         Label expiryLabel = new Label("Expiry Date:");
                         TextField expiryField = new TextField();
                         Label cvvLabel = new Label("CVV:");
                         TextField cvvField = new TextField();
-        
+
                         Button confirmButton = new Button("Confirm");
+                        confirmButton.setStyle(miniButtonStyle);
+                        confirmButton.setOnMouseEntered(so -> {
+                            confirmButton.setStyle(miniButtonStyle + "-fx-background-color: #f99858;");
+                        });
+
+                            confirmButton.setOnMouseExited(so -> {
+                                confirmButton.setStyle(miniButtonStyle);
+                        });
                         confirmButton.setAlignment(Pos.CENTER);
-        
+
+                        // Apply styles to the elements
+                        cardNumberLabel.setStyle("-fx-font-weight: bold;");
+                        expiryLabel.setStyle("-fx-font-weight: bold;");
+                        cvvLabel.setStyle("-fx-font-weight: bold;");
+
+                        // Layout setup
                         VBox root = new VBox(10);
+                        root.setPadding(new Insets(20));
+                        root.setAlignment(Pos.CENTER);
                         root.getChildren().addAll(cardNumberLabel, cardNumberField, expiryLabel, expiryField, cvvLabel, cvvField, confirmButton);
         
                         // Confirm Payment
@@ -316,6 +384,7 @@ public class CustomerInterface {
                 VBox paymentLayout = new VBox(15);
                 paymentLayout.setAlignment(Pos.CENTER);
                 paymentLayout.getChildren().addAll(paymentTableView, completePaymentButton);
+                paymentLayout.setStyle(miniBack);
         
                 Scene paymentScene = new Scene(paymentLayout, 700, 500);
                 paymentStage.setScene(paymentScene);

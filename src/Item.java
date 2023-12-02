@@ -8,101 +8,8 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import java.sql.*;
 
-public class Item {
-    public String itemName;
-    public int quantity;
-    public int price;
-    public String description;
-    private int upperLimit;
-    private final BooleanProperty selected = new SimpleBooleanProperty(false);
-    private int orderId;
-    private int orderItemId;
-
-    public boolean isSelected() {
-        return selected.get();
-    }
-
-    public void setSelected(boolean isSelected) {
-        this.selected.set(isSelected);
-    }
-
-    public BooleanProperty selectedProperty() {
-        return selected;
-    }
+public class Item extends ItemManager{
     
-    public Item(int order_item_id, int order_id, String itemName, int quantity) {
-        this.orderItemId = order_item_id;
-        this.orderId = order_id;
-        this.itemName = itemName;
-        this.quantity = quantity;
-    }
-
-    public Item(String itemName, int quantity) {
-        this.itemName = itemName;
-        this.quantity = quantity;
-        this.upperLimit = this.quantity;
-    }
-
-    public Item(String itemName2, int price, String description) {
-        this.itemName = itemName2;
-        this.price = price;
-        this.description = description;
-    }
-
-    public void setOrderItemId(int order_item_id) {
-        this.orderItemId = order_item_id;
-    }
-
-    public int getOrderItemId() {
-        return this.orderItemId;
-    }
-
-    public int getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
-
-    public int getUpperLimit() {
-        return upperLimit;
-    }
-
-    public void setUpperLimit(int upperlimit) {
-        this.upperLimit = upperlimit;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public int getPrice() {
-        return this.price;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
     public static void fetchAndDisplayInventoryData(TableView<Item> tableView) {
         try {
 
@@ -118,16 +25,7 @@ public class Item {
             while (resultSet.next()) {
                 String itemName = resultSet.getString("item_name");
                 int quantity = resultSet.getInt("quantity");
-                
-                // // Fetching additional details from the menu table using JOIN
-                // String menuQuery = "SELECT * FROM menu WHERE item_name = '" + itemName + "'";
-                // ResultSet menuResultSet = statement.executeQuery(menuQuery);
-                // if (menuResultSet.next()) {
-                //     int price = menuResultSet.getInt("price");
-                //     String description = menuResultSet.getString("descrip");
-                    inventoryList.add(new Item(itemName, quantity));
-                // }
-                // menuResultSet.close();
+                inventoryList.add(new Item(itemName, quantity));
             }
 
             tableView.setItems(inventoryList);
@@ -190,27 +88,14 @@ public class Item {
     public static void addToMenu(String itemName, int price, String description) {
         try {
             Connection connection = DriverManager.getConnection(DatabaseConnection.URL, DatabaseConnection.USERNAME, DatabaseConnection.PASSWORD);
-    
-            // // Check if the item already exists in the menu
-            // PreparedStatement checkIfExists = connection.prepareStatement("SELECT item_name FROM menu WHERE item_name = ?");
-            // checkIfExists.setString(1, itemName);
-            // ResultSet existingItem = checkIfExists.executeQuery();
-    
-            // if (!existingItem.next()) {
-                // If the item doesn't exist, proceed to insert it into the menu
-                PreparedStatement insertItem = connection.prepareStatement("INSERT INTO menu (item_name, price, descrip) VALUES (?, ?, ?)");
-                insertItem.setString(1, itemName);
-                insertItem.setInt(2, price);
-                insertItem.setString(3, description);
-                insertItem.executeUpdate();
-    
-                insertItem.close();
-            // } else {
-                // System.out.println("Item already exists in the menu.");
-            // }
-    
-            // existingItem.close();
-            // checkIfExists.close();
+
+            PreparedStatement insertItem = connection.prepareStatement("INSERT INTO menu (item_name, price, descrip) VALUES (?, ?, ?)");
+            insertItem.setString(1, itemName);
+            insertItem.setInt(2, price);
+            insertItem.setString(3, description);
+            insertItem.executeUpdate();
+
+            insertItem.close();
             connection.close();
         } catch (SQLException e) {
             showAlert("Menu item already exists!");
@@ -231,10 +116,10 @@ public class Item {
                 String itemName = resultSet.getString("menu.item_name");
                 int price = resultSet.getInt("price");
                 String description = resultSet.getString("descrip");
-                int quantity = resultSet.getInt("quantity");
+                // int quantity = resultSet.getInt("quantity");
 
                 // Create an Item object with fetched data
-                Item item = new Item(itemName, quantity);
+                Item item = new Item(itemName, 1);
                 item.setPrice(price);
                 item.setDescription(description);
 
@@ -287,25 +172,29 @@ public class Item {
 
                 // Update the quantity in the order_items table by subtracting the selected quantity
                 int updatedQuantity = invent_Quantity - selectedItem.getQuantity();
-
+                // if (updatedQuantity < 0) {
+                //     showAlert("Unable to place your order. Please order again!");
+                //     return;
+                // }
+                
                 PreparedStatement getPriceStmt = connection.prepareStatement("SELECT price FROM menu WHERE item_name = ?");
                 getPriceStmt.setString(1, selectedItem.getItemName());
                 ResultSet priceResultSet = getPriceStmt.executeQuery();
     
                 if (priceResultSet.next()) {
                     int price = priceResultSet.getInt("price");
-                    totalPrice += price * updatedQuantity;
+                    totalPrice += price * selectedItem.getQuantity();
                 }
                 getPriceStmt.close();
             
-                if (updatedQuantity >= 0) {
-                    insertOrderItemsStmt.setInt(3, updatedQuantity);
+                // if (updatedQuantity >= 0) {
+                    insertOrderItemsStmt.setInt(3, selectedItem.getQuantity());
                     insertOrderItemsStmt.executeUpdate();
                     PreparedStatement updateInventoryStmt = connection.prepareStatement("UPDATE inventory SET quantity = ? WHERE item_name = ?");
-                    updateInventoryStmt.setInt(1, selectedItem.getQuantity());
+                    updateInventoryStmt.setInt(1, updatedQuantity);
                     updateInventoryStmt.setString(2, selectedItem.getItemName());
                     updateInventoryStmt.executeUpdate();
-                }
+                // }
                 
                 
             }
@@ -349,7 +238,7 @@ public class Item {
             Connection connection = DriverManager.getConnection(DatabaseConnection.URL, DatabaseConnection.USERNAME, DatabaseConnection.PASSWORD);
     
             // Prepare a query to fetch payment information based on the provided email
-            String selectPaymentQuery = "SELECT * FROM payment INNER JOIN orders ON payment.order_id = orders.order_id WHERE orders.reservation_id = ? AND payment.payment_status = 'unpaid'";
+            String selectPaymentQuery = "SELECT * FROM payment INNER JOIN orders ON payment.order_id = orders.order_id WHERE orders.reservation_id = ?";
     
             PreparedStatement selectPaymentStmt = connection.prepareStatement(selectPaymentQuery);
             selectPaymentStmt.setString(1, email);
@@ -362,11 +251,6 @@ public class Item {
                 int orderID = paymentResultSet.getInt("order_id");
                 int totalPrice = paymentResultSet.getInt("total_price");
                 String paymentStatus = paymentResultSet.getString("payment_status");
-    
-                // Display or utilize payment information
-                // System.out.println("Order ID: " + orderID);
-                // System.out.println("Total Price: " + totalPrice);
-                // System.out.println("Payment Status: " + paymentStatus);
                 
                 Payment payment = new Payment(orderID, totalPrice, paymentStatus);
                 
@@ -410,12 +294,13 @@ public class Item {
                 System.out.println("Payment status updated to 'paid' for Order ID: " + orderID);
     
                 // Delete entries from orders table
-                String deleteOrdersQuery = "DELETE FROM orders WHERE order_id = ?";
+                String deleteOrdersQuery = "DELETE orders, payment FROM orders JOIN payment ON orders.order_id = payment.order_id WHERE orders.order_id = ?";
                 PreparedStatement deleteOrdersStmt = connection.prepareStatement(deleteOrdersQuery);
                 deleteOrdersStmt.setInt(1, orderID);
                 int rowsDeleted = deleteOrdersStmt.executeUpdate();
                 ordersDeleted = rowsDeleted > 0;
                 deleteOrdersStmt.close();
+                
     
                 if (ordersDeleted) {
                     System.out.println("Order ID: " + orderID + " deleted from orders table.");
@@ -538,13 +423,6 @@ public class Item {
                 deleteOrderItemStatement.setInt(1, orderItemId);
                 getOrderIDStatement.setInt(1, orderItemId);
     
-                // Get the order_id for the specific order_item_id
-                ResultSet resultSet = getOrderIDStatement.executeQuery();
-                int orderID = -1;
-                if (resultSet.next()) {
-                    orderID = resultSet.getInt("order_id");
-                }
-    
                 // Execute the delete statement for order_items
                 int rowsAffected = deleteOrderItemStatement.executeUpdate();
     
@@ -553,39 +431,41 @@ public class Item {
                 } else {
                     System.out.println("Order item not found or could not be deleted.");
                 }
-    
-                // Check if the order_id exists in other rows of order_items
-                // if (orderID != -1) {
-                //     String checkOrderIDQuery = "SELECT * FROM order_items WHERE order_id = ?";
-                //     try (PreparedStatement checkOrderIDStatement = connection.prepareStatement(checkOrderIDQuery)) {
-                //         checkOrderIDStatement.setInt(1, orderID);
-                //         ResultSet checkResultSet = checkOrderIDStatement.executeQuery();
-                        
-                //         // If the order_id doesn't exist in any other row of order_items, delete it from orders table
-                //         if (!checkResultSet.next()) {
-                //             String deleteOrderQuery = "DELETE FROM orders WHERE order_id = ?";
-                //             try (PreparedStatement deleteOrderStatement = connection.prepareStatement(deleteOrderQuery)) {
-                //                 deleteOrderStatement.setInt(1, orderID);
-                //                 deleteOrderStatement.executeUpdate();
-                //                 System.out.println("Order removed from orders table.");
-                //             }
-                //         }
-                //     }
-                // }
             }
         } catch (SQLException e) {
             showAlert("Unable to Complete Order!");
             System.err.println("Error deleting order item: " + e.getMessage());
         }
     }
-    
 
-    // public static Item createOrderItem(int orderId, String menuItemName, int quantity) {
-    //     Item orderItem = new Item();
-    //     orderItem.setOrderId(orderId); // Set the orderId property
-    //     orderItem.setItemName(menuItemName);
-    //     orderItem.setQuantity(quantity);
-    //     return orderItem;
-    // }    
+    public String itemName;
+    public int quantity;
+    public int price;
+    public String description;
+    private final BooleanProperty selected = new SimpleBooleanProperty(false);
+
+    public boolean isSelected() {
+        return selected.get();
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.selected.set(isSelected);
+    }
+
+    public BooleanProperty selectedProperty() {
+        return selected;
+    }
     
+    public Item(int order_item_id, int order_id, String itemName, int quantity) {
+        super(order_item_id, order_id, itemName, quantity);
+    }
+
+    public Item(String itemName, int quantity) {
+        super(itemName, quantity);
+    }
+
+    public Item(String itemName2, int price, String description) {
+        super(itemName2, price, description);
+    }
+
 }
