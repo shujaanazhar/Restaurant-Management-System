@@ -1,6 +1,3 @@
-/**
- * Payment
- */
 public class Payment {
 
     public int order_id;

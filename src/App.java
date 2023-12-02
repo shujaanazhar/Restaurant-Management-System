@@ -15,31 +15,35 @@ public class App extends Application {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("Restaurant Management System");
 
+        String buttonStyle = "-fx-background-color: #AAD6F9; -fx-text-fill: #21324E; -fx-font-size: 14pt; -fx-pref-width: 150px;";
+
+        // Text styling
         Text userTypeText = new Text("Choose the user type");
-        userTypeText.setStyle("-fx-font-size: 16pt;");
-        // Creating buttons
+        userTypeText.setStyle("-fx-font-size: 20pt; -fx-fill: #AAD6F9; -fx-font-weight: bold; -fx-font-style: italic; -fx-font-family: 'Georgia';");
+
+        // Buttons styling
         Button customerButton = new Button("Customer");
         Button adminButton = new Button("Admin");
         Button chefButton = new Button("Chef");
 
-        // Beautify the buttons
-        customerButton.setStyle("-fx-font-size: 14pt;");
-        adminButton.setStyle("-fx-font-size: 14pt;");
-        chefButton.setStyle("-fx-font-size: 14pt;");
+        customerButton.setStyle(buttonStyle);
+        adminButton.setStyle(buttonStyle);
+        chefButton.setStyle(buttonStyle);
 
         // Setting actions for buttons
         customerButton.setOnAction(e -> openCustomerInterface());
         adminButton.setOnAction(e -> openAdminInterface());
         chefButton.setOnAction(e -> openChefInterface());
 
-        // Adding buttons to layout
+        // Adding nodes to layout
         VBox layout = new VBox(20);
         layout.setAlignment(Pos.CENTER);
         layout.getChildren().addAll(userTypeText, customerButton, adminButton, chefButton);
 
         // Creating scene and setting the layout
         Scene scene = new Scene(layout, 900, 750);
-        scene.getRoot().setStyle("-fx-background-color: lightblue;");
+        layout.setStyle("-fx-background-color: #21324E; -fx-padding: 50px; -fx-spacing: 20px;");
+
 
         primaryStage.setScene(scene);
         primaryStage.show();

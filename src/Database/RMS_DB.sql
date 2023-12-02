@@ -18,6 +18,13 @@ CREATE TABLE orders (
     FOREIGN KEY (reservation_id) REFERENCES reservation(email)
 );
 
+ALTER TABLE orders DROP PRIMARY KEY;
+
+ALTER TABLE orders MODIFY COLUMN order_id INT AUTO_INCREMENT PRIMARY KEY;
+
+ALTER TABLE orders AUTO_INCREMENT = 1;
+
+
 CREATE TABLE order_items (
     order_item_id INT PRIMARY KEY,
     order_id INT NOT NULL,
