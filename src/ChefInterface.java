@@ -190,12 +190,9 @@ public class ChefInterface {
         chefLayout.getChildren().addAll(welcomeText, updateInventoryButton, viewOrdersButton, addMenuButton);
 
         Scene chefScene = new Scene(chefLayout, 900, 750);
-        chefScene.getRoot().setStyle("-fx-background-color: ffcc66;");
+        chefScene.getRoot().setStyle("-fx-background-color: ffe3c7;");
 
         return chefScene;
-    }
-
-    // Method to fetch inventory data from MySQL and populate the TableView
-    
+    }   
     
 }
