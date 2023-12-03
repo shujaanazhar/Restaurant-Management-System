@@ -160,6 +160,7 @@ public class AdminInterface {
 
                 VBox addReservationLayout = new VBox(10);
                 addReservationLayout.setAlignment(Pos.CENTER);
+                addReservationLayout.setPadding(new Insets(20));;
                 addReservationLayout.getChildren().addAll(custNameField, emailField, datePicker, timeBox, numPeopleField);
 
                 Scene addReservationScene = new Scene(addReservationLayout, 400, 400);
